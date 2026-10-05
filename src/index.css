@@ -1,0 +1,959 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap");
+
+:root {
+  --bg: #f1f0ff;
+  --text: #1a1838;
+  --muted: #5f5b86;
+  --card: rgba(255, 255, 255, 0.7);
+  --track: rgba(0, 0, 0, 0.08);
+  --neon-1: #e0199f;
+  --neon-2: #0096d6;
+  --neon-3: #6d3df0;
+  --grid: rgba(109, 61, 240, 0.09);
+  --blob-1: rgba(224, 25, 159, 0.2);
+  --blob-2: rgba(0, 150, 214, 0.22);
+  --blob-3: rgba(109, 61, 240, 0.2);
+  --c-l: 48%;
+  --text-glow: 0 0 0 transparent;
+  --title-glow: 0 0 0 transparent;
+}
+
+[data-theme="dark"] {
+  --bg: #05050d;
+  --text: #eaf6ff;
+  --muted: #8e9bc4;
+  --card: rgba(12, 14, 38, 0.7);
+  --track: rgba(255, 255, 255, 0.1);
+  --neon-1: #ff2bd6;
+  --neon-2: #00e5ff;
+  --neon-3: #8b5cff;
+  --grid: rgba(0, 229, 255, 0.07);
+  --blob-1: rgba(255, 43, 214, 0.22);
+  --blob-2: rgba(0, 229, 255, 0.18);
+  --blob-3: rgba(139, 92, 255, 0.26);
+  --c-l: 62%;
+  --text-glow: 0 0 10px rgba(0, 229, 255, 0.55);
+  --title-glow: 0 0 14px rgba(255, 43, 214, 0.65);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Outfit", system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  transition: background 0.3s, color 0.3s;
+}
+
+/* Latar: blob neon yang bergerak pelan */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -20%;
+  z-index: -2;
+  background:
+    radial-gradient(circle at 12% 15%, var(--blob-1), transparent 38%),
+    radial-gradient(circle at 88% 20%, var(--blob-2), transparent 40%),
+    radial-gradient(circle at 50% 95%, var(--blob-3), transparent 45%);
+  animation: drift 18s ease-in-out infinite alternate;
+}
+
+@keyframes drift {
+  to {
+    transform: translate(3%, -3%) scale(1.08);
+  }
+}
+
+/* Latar: grid neon */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 48px 48px;
+  -webkit-mask-image: radial-gradient(ellipse at center, black 25%, transparent 75%);
+  mask-image: radial-gradient(ellipse at center, black 25%, transparent 75%);
+  pointer-events: none;
+}
+
+.app {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 24px 20px 64px;
+}
+
+/* ---------- Header ---------- */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
+.app-title-link {
+  text-decoration: none;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  background: linear-gradient(90deg, var(--neon-1), var(--neon-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(var(--title-glow));
+  animation: flicker 6s infinite;
+}
+
+@keyframes flicker {
+  0%, 18%, 22%, 62%, 64%, 100% {
+    opacity: 1;
+  }
+  20%, 63% {
+    opacity: 0.55;
+  }
+}
+
+.app-header h1::before {
+  content: "";
+  display: inline-block;
+  width: 0.8em;
+  height: 0.8em;
+  margin-right: 0.45em;
+  border-radius: 50%;
+  border: 2px solid var(--neon-2);
+  background: linear-gradient(
+    to bottom,
+    var(--neon-1) 0 44%,
+    var(--neon-2) 44% 56%,
+    #ffffff 56% 100%
+  );
+  vertical-align: -0.05em;
+}
+
+.theme-toggle {
+  padding: 10px 18px;
+  border: 1px solid var(--neon-2);
+  border-radius: 999px;
+  background: var(--card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 0 14px color-mix(in srgb, var(--neon-2) 45%, transparent);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.theme-toggle:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 26px color-mix(in srgb, var(--neon-2) 80%, transparent);
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  text-align: center;
+  margin: 8px 0 24px;
+}
+
+.hero h2 {
+  margin: 0 0 8px;
+  font-size: clamp(30px, 5vw, 48px);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -1px;
+}
+
+.hero h2 span {
+  background: linear-gradient(90deg, var(--neon-1), var(--neon-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(var(--title-glow));
+}
+
+.hero p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 17px;
+}
+
+/* ---------- Status ---------- */
+.status {
+  text-align: center;
+  font-size: 18px;
+  color: var(--muted);
+}
+
+.status-error {
+  color: #ff5470;
+  font-weight: 600;
+}
+
+/* ---------- Search ---------- */
+.search {
+  max-width: 560px;
+  margin: 0 auto 40px;
+}
+
+.search-form {
+  display: flex;
+  gap: 8px;
+  padding: 6px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--neon-2) 60%, transparent);
+  background: var(--card);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--neon-2) 30%, transparent);
+  transition: box-shadow 0.25s, border-color 0.25s;
+}
+
+.search-form:focus-within {
+  border-color: var(--neon-1);
+  box-shadow:
+    0 0 22px color-mix(in srgb, var(--neon-1) 60%, transparent),
+    0 0 50px color-mix(in srgb, var(--neon-3) 35%, transparent);
+}
+
+.search-input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 18px;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 16px;
+}
+
+.search-input::placeholder {
+  color: var(--muted);
+}
+
+.search-button {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--neon-1), var(--neon-3));
+  color: white;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow: 0 0 16px color-mix(in srgb, var(--neon-1) 60%, transparent);
+  transition: transform 0.2s, filter 0.2s;
+}
+
+.search-button:hover {
+  transform: scale(1.06);
+  filter: brightness(1.15);
+}
+
+/* ---------- Grid daftar Pokemon ---------- */
+.pokemon-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 22px;
+}
+
+.pokemon-list-item {
+  /* tiap kartu punya warna neon sendiri berdasarkan urutannya */
+  --c: hsl(calc(var(--i, 0) * 37 + 170), 100%, var(--c-l));
+  list-style: none;
+  animation: fadeUp 0.5s both;
+  animation-delay: calc(var(--i, 0) * 40ms);
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.pokemon-link {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 22px 14px 18px;
+  border-radius: 24px;
+  border: 1px solid color-mix(in srgb, var(--c) 55%, transparent);
+  background: var(--card);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow:
+    0 0 16px color-mix(in srgb, var(--c) 25%, transparent),
+    inset 0 0 26px color-mix(in srgb, var(--c) 8%, transparent);
+  text-decoration: none;
+  color: inherit;
+  overflow: hidden;
+  transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+}
+
+/* lingkaran cahaya di belakang karakter */
+.pokemon-link::before {
+  content: "";
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  width: 140px;
+  height: 140px;
+  margin-left: -70px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--c) 42%, transparent),
+    transparent 70%
+  );
+  transition: transform 0.3s;
+}
+
+/* bayangan cahaya di lantai, ikut mengecil saat karakter naik */
+.pokemon-link::after {
+  content: "";
+  position: absolute;
+  top: 140px;
+  left: 50%;
+  width: 78px;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse,
+    color-mix(in srgb, var(--c) 75%, transparent),
+    transparent 70%
+  );
+  transform: translateX(-50%);
+  animation: shade 3.2s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * -0.35s);
+}
+
+@keyframes shade {
+  0%, 100% {
+    transform: translateX(-50%) scale(1);
+    opacity: 0.95;
+  }
+  50% {
+    transform: translateX(-50%) scale(0.65);
+    opacity: 0.45;
+  }
+}
+
+.pokemon-link:hover {
+  transform: translateY(-8px);
+  border-color: var(--c);
+  box-shadow:
+    0 0 26px color-mix(in srgb, var(--c) 65%, transparent),
+    0 0 60px color-mix(in srgb, var(--c) 30%, transparent),
+    inset 0 0 30px color-mix(in srgb, var(--c) 14%, transparent);
+}
+
+.pokemon-link:hover::before {
+  transform: scale(1.3);
+}
+
+/* karakter melayang naik-turun */
+.pokemon-sprite {
+  position: relative;
+  z-index: 1;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.35));
+  animation: bob 3.2s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * -0.35s);
+  transition: scale 0.3s;
+}
+
+@keyframes bob {
+  0%, 100% {
+    transform: translateY(0) rotate(-2.5deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(2.5deg);
+  }
+}
+
+.pokemon-link:hover .pokemon-sprite {
+  scale: 1.18;
+}
+
+.pokemon-id {
+  position: absolute;
+  top: 12px;
+  left: 14px;
+  z-index: 2;
+  padding: 2px 10px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--c) 60%, transparent);
+  color: var(--c);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.pokemon-name {
+  position: relative;
+  z-index: 1;
+  font-weight: 700;
+  font-size: 19px;
+  text-transform: capitalize;
+  text-shadow: var(--text-glow);
+}
+
+/* ---------- Skeleton loading ---------- */
+.skeleton {
+  list-style: none;
+  height: 195px;
+  border-radius: 24px;
+  border: 1px solid color-mix(in srgb, var(--neon-2) 35%, transparent);
+  background: linear-gradient(
+    100deg,
+    var(--card) 30%,
+    color-mix(in srgb, var(--neon-2) 25%, transparent) 50%,
+    var(--card) 70%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.3s infinite linear;
+}
+
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+/* ---------- Halaman detail ---------- */
+.back-link {
+  display: inline-block;
+  margin-bottom: 18px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--neon-2);
+  background: var(--card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  box-shadow: 0 0 12px color-mix(in srgb, var(--neon-2) 40%, transparent);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.back-link:hover {
+  transform: translateX(-3px);
+  box-shadow: 0 0 24px color-mix(in srgb, var(--neon-2) 75%, transparent);
+}
+
+.detail-page {
+  max-width: 460px;
+  margin: 0 auto;
+  animation: fadeUp 0.5s both;
+}
+
+.detail-card {
+  --g: var(--glow, var(--neon-2));
+  border-radius: 32px;
+  overflow: hidden;
+  border: 1px solid var(--g);
+  background: var(--card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow:
+    0 0 26px color-mix(in srgb, var(--g) 55%, transparent),
+    0 0 80px color-mix(in srgb, var(--g) 25%, transparent),
+    inset 0 0 40px color-mix(in srgb, var(--g) 10%, transparent);
+  text-align: center;
+  padding-bottom: 28px;
+}
+
+.detail-hero {
+  position: relative;
+  padding: 30px 0 22px;
+}
+
+.detail-hero img {
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 14px 18px rgba(0, 0, 0, 0.4));
+  animation: float 3.5s ease-in-out infinite;
+}
+
+/* bayangan cahaya di bawah karakter */
+.detail-hero::after {
+  content: "";
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  width: 150px;
+  height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse,
+    color-mix(in srgb, var(--g) 80%, transparent),
+    transparent 70%
+  );
+  transform: translateX(-50%);
+  animation: shade 3.5s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(-14px) rotate(2deg);
+  }
+}
+
+.detail-card h2 {
+  margin: 8px 0;
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  text-shadow: var(--text-glow);
+}
+
+.type-badges {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.type-badge {
+  padding: 5px 16px;
+  border-radius: 999px;
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: capitalize;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.25);
+}
+
+.measures {
+  color: var(--muted);
+  margin: 0 0 18px;
+}
+
+.stat-list {
+  list-style: none;
+  padding: 0 28px;
+  margin: 0;
+  text-align: left;
+}
+
+.stat-row {
+  display: grid;
+  grid-template-columns: 120px 36px 1fr;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 0;
+}
+
+.stat-name {
+  text-transform: capitalize;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.stat-value {
+  font-weight: 800;
+  text-align: right;
+}
+
+.stat-bar {
+  height: 10px;
+  background: var(--track);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.stat-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  box-shadow: 0 0 12px var(--g);
+  filter: saturate(1.4);
+  transition: width 0.8s;
+}
+
+/* ---------- Layar kecil ---------- */
+@media (max-width: 520px) {
+  .app-header h1 {
+    font-size: 24px;
+  }
+
+  .pokemon-list {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+
+  .stat-row {
+    grid-template-columns: 92px 32px 1fr;
+  }
+}
+
+/* Hormati pengguna yang mematikan animasi di perangkatnya */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* =====================================================
+   FITUR BARU: tab, filter tipe, favorit, Show more
+   (tempel di PALING BAWAH index.css)
+   ===================================================== */
+
+/* ---------- Header: dua tombol ---------- */
+.header-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* ---------- Tab Explore / Favorites ---------- */
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 0 0 28px;
+}
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--neon-2) 45%, transparent);
+  background: var(--card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--muted);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 15px;
+  transition: transform 0.2s, box-shadow 0.2s, color 0.2s;
+}
+
+.tab:hover {
+  color: var(--text);
+  transform: translateY(-2px);
+}
+
+.tab.active {
+  color: #ffffff;
+  background: linear-gradient(90deg, var(--neon-1), var(--neon-3));
+  border-color: transparent;
+  box-shadow: 0 0 20px color-mix(in srgb, var(--neon-1) 55%, transparent);
+}
+
+.tab-count {
+  min-width: 22px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--track);
+  font-size: 12px;
+  text-align: center;
+}
+
+.tab.active .tab-count {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+/* ---------- Kolom pencarian (versi live) ---------- */
+.search {
+  margin-bottom: 16px;
+}
+
+.search-icon {
+  display: flex;
+  align-items: center;
+  padding-left: 14px;
+  font-size: 16px;
+}
+
+.search-input {
+  padding-left: 6px;
+}
+
+.search-clear {
+  flex-shrink: 0;
+  align-self: center;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 50%;
+  background: var(--track);
+  color: var(--text);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.search-clear:hover {
+  background: color-mix(in srgb, var(--neon-1) 45%, transparent);
+}
+
+/* ---------- Tombol filter tipe ---------- */
+.type-filter {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  max-width: 760px;
+  margin: 0 auto 20px;
+}
+
+.chip {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--chip) 70%, transparent);
+  background: color-mix(in srgb, var(--chip) 12%, transparent);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.chip:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--chip) 60%, transparent);
+}
+
+.chip.active {
+  background: var(--chip);
+  border-color: var(--chip);
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--chip) 80%, transparent);
+}
+
+.result-count {
+  margin: 0 0 20px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* ---------- Kartu: pembungkus supaya tombol hati ikut terangkat ---------- */
+.card {
+  position: relative;
+  transition: transform 0.25s;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+}
+
+.card .pokemon-link:hover {
+  transform: none;
+}
+
+/* jeda animasi muncul dibatasi supaya kartu baru tidak telat muncul */
+.pokemon-list-item {
+  animation-delay: calc(min(var(--i, 0), 12) * 40ms);
+}
+
+/* ---------- Tombol hati (favorit) ---------- */
+.fav-btn {
+  --heart: #ff2b6d;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--heart) 45%, transparent);
+  background: var(--card);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--muted);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.fav-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: transparent;
+  stroke: currentColor;
+  stroke-width: 2;
+  transition: fill 0.2s, stroke 0.2s;
+}
+
+.fav-btn:hover {
+  transform: scale(1.12);
+  color: var(--heart);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--heart) 60%, transparent);
+}
+
+.fav-btn.active {
+  color: var(--heart);
+  border-color: var(--heart);
+}
+
+.fav-btn.active svg {
+  fill: var(--heart);
+  stroke: var(--heart);
+  filter: drop-shadow(0 0 6px var(--heart));
+}
+
+/* cincin yang membesar saat hati ditekan */
+.fav-btn::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  border: 2px solid var(--heart);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.fav-btn.pop svg {
+  animation: heartPop 0.6s ease;
+}
+
+.fav-btn.pop::after {
+  animation: heartRing 0.6s ease-out;
+}
+
+@keyframes heartPop {
+  0% {
+    transform: scale(1);
+  }
+  30% {
+    transform: scale(1.55);
+  }
+  55% {
+    transform: scale(0.85);
+  }
+  80% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes heartRing {
+  from {
+    transform: scale(0.8);
+    opacity: 0.9;
+  }
+  to {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+/* versi besar di halaman detail */
+.detail-card {
+  position: relative;
+}
+
+.fav-btn.large {
+  top: 16px;
+  right: 16px;
+  width: 46px;
+  height: 46px;
+}
+
+.fav-btn.large svg {
+  width: 26px;
+  height: 26px;
+}
+
+/* ---------- Suara Pokemon di halaman detail ---------- */
+.cry-btn {
+  display: block;
+  margin: 0 auto;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.cry-hint {
+  margin: 0 0 6px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* ---------- Tombol Show more dan halaman kosong ---------- */
+.more-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+}
+
+.more-button {
+  padding: 12px 32px;
+  border-radius: 999px;
+  border: 1px solid var(--neon-2);
+  background: var(--card);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 0 16px color-mix(in srgb, var(--neon-2) 40%, transparent);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.more-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 28px color-mix(in srgb, var(--neon-2) 75%, transparent);
+}
+
+.empty-state {
+  text-align: center;
+  color: var(--muted);
+}
+
+.empty-heart {
+  font-size: 56px;
+  animation: bob 3.2s ease-in-out infinite;
+}
+
+@media (max-width: 520px) {
+  .theme-toggle {
+    padding: 8px 12px;
+  }
+
+  .tab {
+    padding: 9px 16px;
+  }
+}
